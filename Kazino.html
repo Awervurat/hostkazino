@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Казино</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #000; /* Черный фон */
+            color: #fff;
+        }
+        .welcome {
+            font-size: 32px;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
+        }
+        .game {
+            margin-top: 50px;
+        }
+        .button {
+            background-color: #ffcc00;
+            color: #000;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .button:hover {
+            background-color: #ffaa00;
+        }
+        .result {
+            font-size: 24px;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
+        }
+        .balance {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome">
+        Приветствуем тебя в казино!
+    </div>
+    <div class="balance" id="balance">
+        Ваш баланс: $100
+    </div>
+    <div class="game">
+        <input type="number" id="bet" class="input" placeholder="Введите вашу ставку" min="1">
+        <button class="button" onclick="playGame()">Играть</button>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        let balance = 100; // Изначальный баланс
+
+        function playGame() {
+            const betInput = document.getElementById('bet');
+            const bet = parseInt(betInput.value);
+
+            // Проверка на корректность ставки
+            if (isNaN(bet) || bet <= 0) {
+                document.getElementById('result').innerText = 'Пожалуйста, введите корректную ставку.';
+                return;
+            }
+
+            if (bet > balance) {
+                document.getElementById('result').innerText = 'У вас недостаточно денег для этой ставки.';
+                return;
+            }
+
+            // Генерация случайного числа от 1 до 100
+            const randomNumber = Math.floor(Math.random() * 100) + 1;
+
+            // Условие выигрыша (шанс выигрыша 10%)
+            if (randomNumber > 90) {
+                const winnings = bet * 2; // Выигрыш удваивает ставку
+                balance += winnings;
+                document.getElementById('result').innerText = `Поздравляем! Вы выиграли $${winnings}! Число: ${randomNumber}`;
+            } else {
+                balance -= bet; // Ставка вычитается из баланса
+                const insults = [
+                    'Ха-ха, вы снова проиграли!',
+                    'Серьезно? Это всё, на что вы способны?',
+                    'Казино всегда выигрывает!',
+                    'Попробуйте ещё раз, если осмелитесь!',
+                    'Ваши деньги теперь наши!'
+                ];
+                const randomInsult = insults[Math.floor(Math.random() * insults.length)];
+                document.getElementById('result').innerText = `${randomInsult} Вы потеряли $${bet}. Число: ${randomNumber}`;
+            }
+
+            // Обновление баланса
+            document.getElementById('balance').innerText = `Ваш баланс: $${balance}`;
+
+            // Проверка на окончание игры
+            if (balance <= 0) {
+                document.getElementById('result').innerText = 'Извините, но вы проиграли все деньги. Казино вас победило!';
+                document.getElementById('bet').disabled = true;
+                document.querySelector('.button').disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>
